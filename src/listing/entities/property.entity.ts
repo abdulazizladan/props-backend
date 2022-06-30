@@ -1,5 +1,11 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
 
+enum Status {
+    available = 'available',
+    sold = 'sold',
+    reserved = 'reserved'
+}
+
 @Entity()
 export class Property extends BaseEntity {
 
@@ -19,7 +25,7 @@ export class Property extends BaseEntity {
     type: string;
 
     @Column()
-    address: string;
+    streetAddress: string;
 
     @Column()
     city: string;
@@ -27,15 +33,14 @@ export class Property extends BaseEntity {
     @Column()
     state: string;
 
-    @Column()
-    zip: string;
 
     @Column()
     image: string;
 
-    @Column()
-    status: string;
+    @Column({default: Status.available})
+    status: Status
 
     @Column()
     user: string;
 }
+

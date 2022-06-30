@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EMPTY, from, Observable } from 'rxjs';
+import { CreatePropertyDTO } from 'src/listing/dto/property.dto';
 import { Property } from 'src/listing/entities/property.entity';
 import { Repository } from 'typeorm';
 
@@ -21,11 +22,12 @@ export class PropertyService {
         const property = this.propertyRepository.findOne({where: {id: id}});
         if(property) {
             return from(property)
-        } else throw new NotFoundException();
+        } else throw new NotFoundException('Could not find property');
     }
 
-    create() {
-        return 'This action adds a new property';
+    create(property: CreatePropertyDTO) {
+        const newProperty = this.propertyRepository.create(property);
+        return from(this.propertyRepository.save(newProperty));
     }
 
     update() {

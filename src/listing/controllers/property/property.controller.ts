@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseFilters } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreatePropertyDTO } from 'src/listing/dto/property.dto';
 import { PropertyService } from 'src/listing/services/property/property.service';
@@ -14,7 +14,7 @@ export class PropertyController {
     @ApiOperation({ summary: 'Create new property' })
     @Post('/create')
     create(@Body() property: CreatePropertyDTO) {
-        return 'This action adds a new property';
+        return this.propertyService.create(property);
     }
 
     @ApiOperation({summary: 'Get all properties'})
