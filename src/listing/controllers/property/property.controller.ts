@@ -1,6 +1,8 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseFilters } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { CreatePropertyDTO } from 'src/listing/dto/property.dto';
+import { Observable } from 'rxjs';
+import { CreatePropertyDTO, UpdatePropertyDTO } from 'src/listing/dto/property.dto';
+import { Property } from 'src/listing/entities/property.entity';
 import { PropertyService } from 'src/listing/services/property/property.service';
 
 @ApiTags('Property')
@@ -13,6 +15,7 @@ export class PropertyController {
 
     @ApiOperation({ summary: 'Create new property' })
     @Post('/create')
+    @UsePipes(ValidationPipe)
     create(@Body() property: CreatePropertyDTO) {
         return this.propertyService.create(property);
     }
@@ -31,14 +34,14 @@ export class PropertyController {
 
     @ApiOperation({summary: 'Update property by ID'})
     @Patch('/:id')
-    update() {
-
+    update(@Param('id', ParseIntPipe) id: number, @Body() property: UpdatePropertyDTO) {
+        return this.propertyService.update(id, property)
     }
 
     @ApiOperation({summary: 'Delete property by ID'})
     @Delete('/:id')
-    remove() {
-    
+    remove(@Param('id', ParseIntPipe)id: number) {
+        return this.propertyService.remove(id);
     }
 
 }

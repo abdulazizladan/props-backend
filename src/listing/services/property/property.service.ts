@@ -18,11 +18,12 @@ export class PropertyService {
         } else return EMPTY;
     }
 
-    getByID(id: number) {
-        const property = this.propertyRepository.findOne({where: {id: id}});
-        if(property) {
-            return from(property)
-        } else throw new NotFoundException('Could not find property');
+    async getByID(id: number): Promise<Property> {
+        const found = await this.propertyRepository.findOne({where: {id: id}});
+        if(!found) {
+            throw new NotFoundException(`Could not find property with id: ${id}`);
+        } 
+        else return found
     }
 
     create(property: CreatePropertyDTO) {
@@ -30,11 +31,25 @@ export class PropertyService {
         return from(this.propertyRepository.save(newProperty));
     }
 
-    update() {
-        
+    async update(id: number, property) {
+        const updatedProperty = await this.getByID(id)
+        if(updatedProperty.price){
+            updatedProperty.price = property.price;
+        }
+        if(updatedProperty.status) {
+            updatedProperty.status = property.status;
+        }        
+        await updatedProperty.save()
+        return updatedProperty;
     }
 
-    remove() {  
-    
+    async remove(id: number) {  
+        const property = await this.getByID(id);
+        if(!property) {
+            throw new NotFoundException('Could not find property');
+        }else {
+            await this.propertyRepository.remove(property);
+            return property;
+        }
     }
 }
