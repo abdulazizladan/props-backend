@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EMPTY, from, Observable } from 'rxjs';
+import { EMPTY, from, Observable, of } from 'rxjs';
 import { CreatePropertyDTO } from 'src/listing/dto/property.dto';
 import { Property } from 'src/listing/entities/property.entity';
 import { Repository } from 'typeorm';
@@ -17,13 +17,13 @@ export class PropertyService {
             return from(properties)
         } else return EMPTY;
     }
-
-    async getByID(id: number): Promise<Property> {
-        const found = await this.propertyRepository.findOne({where: {id: id}});
-        if(!found) {
+    
+    getByID(id: number): Observable<Property> {
+        const found = this.propertyRepository.findOne({where: {id: id}});
+        if(found == undefined) {
             throw new NotFoundException(`Could not find property with id: ${id}`);
         } 
-        else return found
+        return from(found)
     }
 
     create(property: CreatePropertyDTO) {
@@ -31,25 +31,25 @@ export class PropertyService {
         return from(this.propertyRepository.save(newProperty));
     }
 
-    async update(id: number, property) {
-        const updatedProperty = await this.getByID(id)
-        if(updatedProperty.price){
-            updatedProperty.price = property.price;
-        }
-        if(updatedProperty.status) {
-            updatedProperty.status = property.status;
-        }        
-        await updatedProperty.save()
-        return updatedProperty;
+    update(id: number, property) {
+        const updatedProperty = this.getByID(id)
+        //if(updatedProperty.price){
+        //    updatedProperty.price = property.price;
+        //}
+        //if(updatedProperty.status) {
+        //    updatedProperty.status = property.status;
+        //}        
+        //updatedProperty.save()
+        //return updatedProperty;
     }
 
-    async remove(id: number) {  
-        const property = await this.getByID(id);
-        if(!property) {
-            throw new NotFoundException('Could not find property');
-        }else {
-            await this.propertyRepository.remove(property);
-            return property;
-        }
+    remove(id: number) {  
+        //const property = await this.getByID(id);
+        //if(!property) {
+        //    throw new NotFoundException('Could not find property');
+        //}else {
+        //    await this.propertyRepository.remove(property);
+        //    return property;
+        //}
     }
 }

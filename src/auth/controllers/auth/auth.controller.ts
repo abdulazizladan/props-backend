@@ -1,5 +1,6 @@
-import { Controller, Param, Post } from '@nestjs/common';
+import { Body, Controller, Param, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { SigninUserDTO } from 'src/user/dto/signindto';
 import { UserService } from 'src/user/services/user/user.service';
 
 @ApiTags('Auth')
@@ -10,8 +11,8 @@ export class AuthController {
   }
 
   @Post('/signin')
-  signin() {
-
+  signin(@Body() user: SigninUserDTO) {
+    return this.userService.signin(user)
   }
 
   @Post('/signup')

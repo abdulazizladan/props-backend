@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { SigninUserDTO } from 'src/user/dto/signindto';
 import { User } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
 
@@ -7,6 +8,14 @@ import { Repository } from 'typeorm';
 export class UserService {
     
     constructor( @InjectRepository(User) private userRepository: Repository<User>) {
+
+    }
+
+    signin(user: SigninUserDTO) {
+
+    }
+
+    signup() {
 
     }
 
