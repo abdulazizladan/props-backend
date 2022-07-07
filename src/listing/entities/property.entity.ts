@@ -1,4 +1,6 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { BaseEntity, Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { Layout } from './layout.entity';
+import { Rooms } from './rooms.entity';
 
 enum Status {
     available = 'available',
@@ -39,6 +41,14 @@ export class Property extends BaseEntity {
 
     @Column({default: Status.available})
     status: Status
+
+    @OneToOne(() => Layout, (layout) => layout.property)
+    @JoinColumn()
+    layout: Layout;
+
+    @OneToOne(() => Rooms, (rooms) => rooms.property)
+    @JoinColumn()
+    rooms: Rooms;
 
     @Column()
     user: string;

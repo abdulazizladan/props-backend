@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EMPTY, from, Observable, of } from 'rxjs';
 import { CreatePropertyDTO } from 'src/listing/dto/property.dto';
+import { Layout } from 'src/listing/entities/layout.entity';
 import { Property } from 'src/listing/entities/property.entity';
 import { Repository } from 'typeorm';
 
@@ -12,7 +13,7 @@ export class PropertyService {
     }
 
     getAll() : Observable<Property[]> {
-        const properties = this.propertyRepository.find();
+        const properties = this.propertyRepository.find({relations: ['layout', 'rooms']});
         if(properties){
             return from(properties)
         } else return EMPTY;
